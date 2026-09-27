@@ -1,0 +1,102 @@
+Level 1 — ML
+
+Dataset
+→ preprocessing
+→ feature engineering
+→ models
+→ evaluation
+
+Level 2 — Advanced ML
+Optuna
++ calibration
++ threshold optimization
++ SHAP
++ leakage prevention
+
+Level 3 — Engineering
+MLflow
++ model registry
++ FastAPI
++ Docker
++ AWS S3
++ testing
++ logging
+
+STEP 1 → Obtain dataset
+STEP 2 → Understand every important column
+STEP 3 → Define prediction target
+STEP 4 → Detect data leakage
+STEP 5 → EDA
+STEP 6 → Data cleaning
+STEP 7 → Feature engineering
+STEP 8 → Train/validation/test split
+STEP 9 → Baseline
+STEP 10 → XGBoost + LightGBM
+STEP 11 → Optuna
+STEP 12 → Calibration
+STEP 13 → Threshold optimization
+STEP 14 → SHAP
+STEP 15 → MLflow
+STEP 16 → FastAPI
+STEP 17 → Docker
+STEP 18 → AWS S3
+STEP 19 → Testing + documentation
+STEP 20 → Resume/GitHub presentation
+
+
+------------------------------------Setting up Project Structure---------------------------------------
+
+1. Create repo, clone it in local
+2. Create a virtual env named 'atlas' - conda create -n atlas python=3.12
+3. Activate the virtual env - conda activate atlas
+4. pip install cookiecutter
+5. cookiecutter -c v1 https://github.com/drivendata/cookiecutter-data-science
+6. Rename src.models -> src.model
+7. git add, commit and push
+
+-----------------------------Setup MLFlow on Dagshub------------------------------------------------
+8. Go to: https://dagshub.com/dashboard
+9. Create > New Repo > Connect a repo > (GitHub) Connect > Select your repo > Connect
+10. Copy experiment tracking url and code snippet. (Also try: Go to MLFlow UI)
+11. pip install dagshub & mlflow
+
+12. Run the exp notebooks
+13. git add - commit - push
+
+14. pip install dvc and  dvc init
+15. open a new cmd terminal and do - echo %TEMP% (copy the tem folder location)
+C:\Users\ASUS\AppData\Local\Temp
+16. dvc remote add -d myremote s3_local
+17. Add code to below files/folders inside src dir:
+   - logger.py
+   - data_ingestion.py
+   - data_preprocessing.py
+   - feature_engineering.py
+   - model_building.py
+   - model_evaluation.py
+   - register_model.py
+
+18. add file - dvc.yaml (till model evaluation.metrics)
+19. add file - params.yaml
+20. DVC pipeline is ready to run - dvc repro
+21. Once do - dvc status
+22. git add - commit - push
+
+
+23. Need to add S3 as remote storage - Create IAM User(keep cred) and S3 bucket
+24. pip install - dfc[s3] & awscli
+25. Checking/deleting dvc remote (optional) - [dvc remote list & dvc remote remove <name>]
+26. Set aws cred - aws configure
+27. Add s3 as dvc remote storage - dvc remote add -d myremote s3://<bucket-name>
+
+28. Create new dir - fask_app | Inside that, add rest of the files and dir
+29. pip install flask and run the app (dvc push - to push data to S3)
+
+30. pip freeze > requirements.txt
+31. Add .github/workflows/ci.yaml file
+
+32. Create key token on Dagshub for auth: Go to dagshub repo > your Settings > Tokens > Generate new token
+  >> Please make sure to save token << >> capstone_test: your generated token <<
+  >> Add this auth token to github secret&var and update on CI file
+
+33. Add dir "tests "&"Scripts" and files within. This will contain our test related scripts for CI.
