@@ -36,12 +36,22 @@ stages:
     cmd: python src/model/model_evaluation.py
     deps:
       - src/model/model_evaluation.py
-      - models/model.pkl
+      - models/calibrated_model.pkl
+      - models/threshold.json
       - data/processed/test.csv
-    params:
-      - model_evaluation.threshold
     metrics:
       - reports/metrics.json:
           cache: false
     outs:
       - reports/experiment_info.json
+  model_calibration:
+    cmd: python src/model/model_calibration.py
+    deps:
+      - src/model/model_calibration.py
+      - models/model.pkl
+      - data/processed/val.csv
+    params:
+      - model_calibration
+    outs:
+      - models/calibrated_model.pkl
+      - models/threshold.json

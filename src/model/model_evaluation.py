@@ -45,7 +45,7 @@ def load_params(params_path: str) -> dict:
         logging.debug('Parameters retrieved from %s', params_path)
         return params
     except FileNotFoundError:
-        logging.error('File not found: %s', e)
+        logging.error('File not found: %s', params_path)
         raise
     except yaml.YAMLError as e:
         logging.error('YAML error: %s', e)
@@ -79,6 +79,18 @@ def load_data(file_path: str) -> pd.DataFrame:
     except Exception as e:
         logging.error('Unexpected error occurred while loading the data: %s', e)
         raise
+
+def load_threshold(file_path: str) -> float:
+    """Load the decision threshold chosen on validation data."""
+    try:
+        with open(file_path, 'r') as file:
+            threshold = json.load(file)['threshold']
+        logging.info('Threshold loaded: %.4f', threshold)
+        return threshold
+    except Exception as e:
+        logging.error('Unexpected error while loading the threshold: %s', e)
+        raise
+
 
 def evaluate_model(clf, X_test: pd.DataFrame, y_test: pd.Series, threshold: float) -> dict:
     """Evaluate the model and return the evaluation metrics."""
@@ -134,9 +146,9 @@ def main():
     with mlflow.start_run() as run:   # Start an MLflow run
         try:
             params = load_params('params.yaml')
-            threshold = params['model_evaluation']['threshold']
+            threshold = load_threshold('./models/threshold.json')
 
-            clf = load_model('./models/model.pkl')
+            clf = load_model('./models/calibrated_model.pkl')
             test_df = load_data('./data/processed/test.csv')
             X_test = test_df.drop(columns=['Default'])
             y_test = test_df['Default']
@@ -152,12 +164,13 @@ def main():
             # Log model parameters and run settings to MLflow
             for param_name, param_value in params['model_building'].items():
                 mlflow.log_param(param_name, param_value)
+            mlflow.log_param('calibration_method', params['model_calibration']['method'])
             mlflow.log_param('threshold', threshold)
             mlflow.log_param('n_features', X_test.shape[1])
-            mlflow.set_tag('model_type', 'LightGBM')
+            mlflow.set_tag('model_type', 'LightGBM + sigmoid calibration')
 
             # Log model to MLflow and register it (creates a new version each run)
-            sample = X_test.head(100)
+            sample = X_test.head(100).astype('float64')
             signature = infer_signature(sample, clf.predict(sample))
             model_info = mlflow.sklearn.log_model(clf, name="model", signature=signature,
                                       input_example=sample.head(5),
@@ -176,6 +189,7 @@ def main():
                 logging.info(f"Model version {version} set as staging.")
 
             # Log helper files (the API needs the preprocessor too)
+            mlflow.log_artifact('models/threshold.json')
             mlflow.log_artifact('reports/metrics.json')
             mlflow.log_artifact('models/preprocessor.pkl')
             mlflow.log_artifact('params.yaml')

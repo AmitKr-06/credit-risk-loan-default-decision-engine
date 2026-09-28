@@ -51,3 +51,6 @@ model_building:   # From optuna run experiment
 
 model_evaluation:
   threshold: 0.21
+
+model_calibration:
+  method: sigmoid
