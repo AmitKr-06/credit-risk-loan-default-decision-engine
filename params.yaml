@@ -54,3 +54,7 @@ model_evaluation:
 
 model_calibration:
   method: sigmoid
+
+model_registration:
+  min_roc_auc: 0.67    # reject anything below this
+  tolerance: 0.001     # allowed drop vs current production
