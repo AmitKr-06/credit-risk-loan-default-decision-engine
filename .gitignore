@@ -222,3 +222,4 @@ notebooks/
 .ipynb_checkpoints/
 data/interim/
 data/processed/
+models/*.pkl

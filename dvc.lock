@@ -1,0 +1,108 @@
+schema: '2.0'
+stages:
+  'data_ingestion:':
+    cmd: python src/data/data_ingestion.py
+    deps:
+    - path: data/raw/loan_data.csv
+      hash: md5
+      md5: b019384d6bc65bf2a3e839362e4ff502
+      size: 167468415
+    - path: src/data/data_ingestion.py
+      hash: md5
+      md5: 87fd92b12134cc9960e051cab79e342e
+      size: 4320
+    params:
+      params.yaml:
+        data_ingestion.test_start_year: 2017
+        data_ingestion.train_end_year: 2015
+        data_ingestion.val_year: 2016
+    outs:
+    - path: data/interim
+      hash: md5
+      md5: d37a1377ca8d1e1da1e471e5aee5bfab.dir
+      size: 101782420
+      nfiles: 3
+  feature_engineering:
+    cmd: python src/features/feature_engineering.py
+    deps:
+    - path: data/interim
+      hash: md5
+      md5: d37a1377ca8d1e1da1e471e5aee5bfab.dir
+      size: 101782420
+      nfiles: 3
+    - path: src/features/feature_engineering.py
+      hash: md5
+      md5: 2ed4e1343d9207ffcfd9a8f8371552c6
+      size: 5937
+    params:
+      params.yaml:
+        feature_engineering:
+          dti_cap_quantile: 0.99
+          te_smoothing: 10
+          final_features:
+          - dti_n
+          - loan_amnt
+          - fico_n
+          - emp_length_n
+          - revenue_log
+          - issue_month
+          - loan_to_income
+          - purpose_car
+          - purpose_credit_card
+          - purpose_debt_consolidation
+          - purpose_educational
+          - purpose_home_improvement
+          - purpose_house
+          - purpose_major_purchase
+          - purpose_medical
+          - purpose_moving
+          - purpose_other
+          - purpose_renewable_energy
+          - purpose_small_business
+          - purpose_vacation
+          - purpose_wedding
+          - home_ownership_n_MORTGAGE
+          - home_ownership_n_OTHER
+          - home_ownership_n_OWN
+          - home_ownership_n_RENT
+          - addr_state_te
+          - zip_code_te
+    outs:
+    - path: data/processed
+      hash: md5
+      md5: 951d9446a63dd1fb726f29787a9e17f7.dir
+      size: 233792115
+      nfiles: 3
+    - path: models/preprocessor.pkl
+      hash: md5
+      md5: b22ae63034b94bf488b52ac75a115b1a
+      size: 44023
+  model_building:
+    cmd: python src/model/model_building.py
+    deps:
+    - path: data/processed/train.csv
+      hash: md5
+      md5: c4d284b1fb24e857126db7da2f7a714f
+      size: 143895695
+    - path: src/model/model_building.py
+      hash: md5
+      md5: 708f4bfe5d5b11e872545b8d6504d879
+      size: 2689
+    params:
+      params.yaml:
+        model_building:
+          n_estimators: 784
+          learning_rate: 0.0579
+          max_depth: 4
+          num_leaves: 57
+          min_child_samples: 34
+          subsample: 0.8125
+          subsample_freq: 1
+          colsample_bytree: 0.5016
+          reg_alpha: 5.845
+          reg_lambda: 0.004546
+    outs:
+    - path: models/model.pkl
+      hash: md5
+      md5: b4c4eb4d2c44c868088f76cc5ef56040
+      size: 1436084
