@@ -48,3 +48,6 @@ model_building:   # From optuna run experiment
   colsample_bytree: 0.5016
   reg_alpha: 5.845
   reg_lambda: 0.004546
+
+model_evaluation:
+  threshold: 0.21

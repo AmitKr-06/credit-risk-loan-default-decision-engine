@@ -32,3 +32,16 @@ stages:
       - model_building
     outs:
       - models/model.pkl
+  model_evaluation:
+    cmd: python src/model/model_evaluation.py
+    deps:
+      - src/model/model_evaluation.py
+      - models/model.pkl
+      - data/processed/test.csv
+    params:
+      - model_evaluation.threshold
+    metrics:
+      - reports/metrics.json:
+          cache: false
+    outs:
+      - reports/experiment_info.json
