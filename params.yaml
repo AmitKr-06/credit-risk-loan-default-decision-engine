@@ -7,8 +7,34 @@ data_ingestion:
 feature_engineering:
   dti_cap_quantile: 0.99
   te_smoothing: 10
-  final_features: [dti_n, loan_amnt, fico_n, emp_length_n, revenue_log, issue_month,
-    loan_to_income, addr_state_te, zip_code_te]   # + the one-hot columns
+  final_features: 
+    - dti_n
+    - loan_amnt
+    - fico_n
+    - emp_length_n
+    - revenue_log
+    - issue_month
+    - loan_to_income
+    - purpose_car
+    - purpose_credit_card
+    - purpose_debt_consolidation
+    - purpose_educational
+    - purpose_home_improvement
+    - purpose_house
+    - purpose_major_purchase
+    - purpose_medical
+    - purpose_moving
+    - purpose_other
+    - purpose_renewable_energy
+    - purpose_small_business
+    - purpose_vacation
+    - purpose_wedding
+    - home_ownership_n_MORTGAGE
+    - home_ownership_n_OTHER
+    - home_ownership_n_OWN
+    - home_ownership_n_RENT
+    - addr_state_te
+    - zip_code_te
 
 
 model_building:   # From optuna run experiment
