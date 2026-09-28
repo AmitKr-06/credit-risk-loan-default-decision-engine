@@ -1,0 +1,24 @@
+data_ingestion:
+  train_end_year: 2015
+  val_year: 2016
+  test_start_year: 2017
+
+
+feature_engineering:
+  dti_cap_quantile: 0.99
+  te_smoothing: 10
+  final_features: [dti_n, loan_amnt, fico_n, emp_length_n, revenue_log, issue_month,
+    loan_to_income, addr_state_te, zip_code_te]   # + the one-hot columns
+
+
+model_building:   # From optuna run experiment
+  n_estimators: 784
+  learning_rate: 0.0579
+  max_depth: 4
+  num_leaves: 57
+  min_child_samples: 34
+  subsample: 0.8125
+  subsample_freq: 1
+  colsample_bytree: 0.5016
+  reg_alpha: 5.845
+  reg_lambda: 0.004546
