@@ -217,4 +217,8 @@ __marimo__/
 
 # Streamlit
 .streamlit/secrets.toml
+# Notebooks
 notebooks/
+.ipynb_checkpoints/
+data/interim/
+data/processed/
