@@ -136,7 +136,7 @@ def main():
         os.makedirs('models', exist_ok = True)
         joblib.dump(pre, 'models/preprocessor.pkl')
 
-        save_data(train_df, val_df, test_df, data_path = './data')
+        save_data(train_out, val_out, test_out, data_path = './data')
     except Exception as e:
         logging.error('Failed to complete the feature engineering process: %s', e)
         print(f'Error: {e}')
